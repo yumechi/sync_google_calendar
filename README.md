@@ -1,0 +1,2 @@
+# sync_google_calendar
+Googleカレンダーを公開用のカレンダーにコピペしてくれるスクリプト
