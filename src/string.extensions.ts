@@ -18,11 +18,11 @@ declare global {
   }
 }
 
-String.prototype['startsWith'] = function(word: string) {
+String.prototype.startsWith = function(word: string) {
   return this.indexOf(word) === 0;
 };
 
-String.prototype['endsWith'] = function(word: string) {
+String.prototype.endsWith = function(word: string) {
   return (
     this.lastIndexOf(word) + word.length === this.length &&
     word.length <= this.length
