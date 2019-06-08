@@ -1,88 +1,92 @@
 import { CalendarUtil, envProperty } from './util';
 
 function run_scripts() {
-  const privateCalendarName: string = envProperty("PRIVATE_CALENDAR");
-  const public_calender_name: string = envProperty("PUBLIC_CALENDAR");
-  const secret_words: string[] = ["secret", "秘密の"];
+  const privateCalendarName: string = envProperty('PRIVATE_CALENDAR');
+  const publicCalenderName: string = envProperty('PUBLIC_CALENDAR');
+  const secretWords: string[] = ['secret', '秘密の'];
 
-  const private_calendar = CalendarUtil.getCalendar(privateCalendarName);
-  const public_calendar = CalendarUtil.getCalendar(public_calender_name);
-  Logger.log(private_calendar.getName());
-  Logger.log(public_calendar.getName());
+  const privateCalendar = CalendarUtil.getCalendar(privateCalendarName);
+  const publicCalendar = CalendarUtil.getCalendar(publicCalenderName);
+  Logger.log(privateCalendar.getName());
+  Logger.log(publicCalendar.getName());
 
-  const events = get_events(private_calendar, 1);
+  const events = getEvents(privateCalendar, 1);
 
-  for (const idx in events) {
+  for (const idx of Object.keys(events)) {
     event = events[idx];
-    const public_word = "【yumechi】";
-    
-    function is_open_public(event) {
-      return endsWith(event.getTitle(), public_word);
+    const publicWord = '【yumechi】';
+
+    function isOpenPublic(event) {
+      return endsWith(event.getTitle(), publicWord);
     }
-    
-    function get_title(event) {
+
+    function getTitle(event) {
       const title = event.getTitle();
-      for (const i in secret_words) {
-        if(startsWith(title, secret_words[i])) {
-           return "予定あり";
+      for (const i in secretWords) {
+        if (startsWith(title, secretWords[i])) {
+          return '予定あり';
         }
       }
       return title;
     }
-    
-    function get_description(event, title) {      
-        const secret_description = "この予定は非公開です";
-        if(title === "予定あり") {
-          return secret_description;
+
+    function getDescription(event, title) {
+      const secretDescription = 'この予定は非公開です';
+      if (title === '予定あり') {
+        return secretDescription;
+      }
+
+      const description = event.getDescription();
+      for (const i in secretWords) {
+        if (startsWith(description, secretWords[i])) {
+          return secretDescription;
         }
-        
-        const description = event.getDescription();
-        for (const i in secret_words) {
-          if(startsWith(description, secret_words[i])) {
-            return secret_description;
-          }
-        }
-        return description;
+      }
+      return description;
     }
 
-    if(is_open_public(event)) {
+    if (isOpenPublic(event)) {
       continue;
     }
 
-    const title = get_title(event);
+    const title = getTitle(event);
     const option = {
-      description: get_description(event, title),
+      description: getDescription(event, title),
     };
-    
-    public_calendar.createEvent(title,
-                                event.getStartTime(),
-                                event.getEndTime(), 
-                                option);
-    // FIXME: remove original calendar event and recreate calendar event of replaced title 
-    event.setTitle(event.getTitle() + " " + public_word);
-    Logger.log("-------------------------");
+
+    publicCalendar.createEvent(
+      title,
+      event.getStartTime(),
+      event.getEndTime(),
+      option
+    );
+    // FIXME: remove original calendar event and recreate calendar event of replaced title
+    event.setTitle(event.getTitle() + ' ' + publicWord);
+    Logger.log('-------------------------');
     Logger.log(title);
     Logger.log(event.getStartTime());
     Logger.log(event.getEndTime());
     Logger.log(option['description']);
-    Logger.log("-------------------------");
+    Logger.log('-------------------------');
   }
 }
 
 function startsWith(stringItem, word) {
-  return stringItem.indexOf(word) === 0; 
+  return stringItem.indexOf(word) === 0;
 }
 
 function endsWith(stringItem, word) {
-  return ((stringItem.lastIndexOf(word) + word.length) === stringItem.length)
-         && (word.length <= stringItem.length);
+  return (
+    stringItem.lastIndexOf(word) + word.length === stringItem.length &&
+    word.length <= stringItem.length
+  );
 }
 
-function get_events(calender, diff) {
+function getEvents(calender, diff) {
   const today = new Date();
-  const end_date = new Date();
-  end_date.setMonth(end_date.getMonth() + diff);
+  const endDate = new Date();
+  endDate.setMonth(endDate.getMonth() + diff);
   // debug
   // end_date.setDate(end_date.getDate() + 1);
-  return calender.getEvents(today, end_date);
+  return calender.getEvents(today, endDate);
 }

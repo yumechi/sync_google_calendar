@@ -5,6 +5,7 @@
   "main": "index.js",
   "dependencies": {
     "@google/clasp": "^2.1.0",
+    "@types/google-apps-script": "0.0.53",
     "tslint": "^5.17.0",
     "typescript": "^3.5.1"
   },
