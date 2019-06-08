@@ -1,56 +1,71 @@
 import { CalendarUtil, envProperty } from './util';
+import './string.extensions';
 
-function run_scripts() {
+function main(): void {
   const privateCalendarName: string = envProperty('PRIVATE_CALENDAR');
   const publicCalenderName: string = envProperty('PUBLIC_CALENDAR');
   const secretWords: string[] = ['secret', '秘密の'];
 
-  const privateCalendar = CalendarUtil.getCalendar(privateCalendarName);
-  const publicCalendar = CalendarUtil.getCalendar(publicCalenderName);
+  const privateCalendar: GoogleAppsScript.Calendar.Calendar = CalendarUtil.getCalendar(
+    privateCalendarName
+  );
+  const publicCalendar: GoogleAppsScript.Calendar.Calendar = CalendarUtil.getCalendar(
+    publicCalenderName
+  );
   Logger.log(privateCalendar.getName());
   Logger.log(publicCalendar.getName());
 
-  const events = getEvents(privateCalendar, 1);
+  const events: GoogleAppsScript.Calendar.CalendarEvent[] = getEvents(
+    privateCalendar,
+    1
+  );
 
-  for (const idx of Object.keys(events)) {
-    event = events[idx];
+  for (const calendarKey of Object.keys(events)) {
+    const event: GoogleAppsScript.Calendar.CalendarEvent = events[calendarKey];
     const publicWord = '【yumechi】';
 
-    function isOpenPublic(event) {
-      return endsWith(event.getTitle(), publicWord);
-    }
+    const isOpenPublic: Function = (
+      event: GoogleAppsScript.Calendar.CalendarEvent
+    ): boolean => {
+      return event.getTitle().endsWith(publicWord);
+    };
 
-    function getTitle(event) {
-      const title = event.getTitle();
+    const getTitle: Function = (
+      event: GoogleAppsScript.Calendar.CalendarEvent
+    ): string => {
+      const title: string = event.getTitle();
       for (const i in secretWords) {
-        if (startsWith(title, secretWords[i])) {
+        if (title.startsWith(secretWords[i])) {
           return '予定あり';
         }
       }
       return title;
-    }
+    };
 
-    function getDescription(event, title) {
+    const getDescription: Function = (
+      event: GoogleAppsScript.Calendar.CalendarEvent,
+      title: string
+    ): string => {
       const secretDescription = 'この予定は非公開です';
       if (title === '予定あり') {
         return secretDescription;
       }
 
-      const description = event.getDescription();
+      const description: string = event.getDescription();
       for (const i in secretWords) {
-        if (startsWith(description, secretWords[i])) {
+        if (description.startsWith(secretWords[i])) {
           return secretDescription;
         }
       }
       return description;
-    }
+    };
 
     if (isOpenPublic(event)) {
       continue;
     }
 
-    const title = getTitle(event);
-    const option = {
+    const title: string = getTitle(event);
+    const option: {} = {
       description: getDescription(event, title),
     };
 
@@ -62,27 +77,16 @@ function run_scripts() {
     );
     // FIXME: remove original calendar event and recreate calendar event of replaced title
     event.setTitle(event.getTitle() + ' ' + publicWord);
-    Logger.log('-------------------------');
-    Logger.log(title);
-    Logger.log(event.getStartTime());
-    Logger.log(event.getEndTime());
-    Logger.log(option['description']);
-    Logger.log('-------------------------');
+    Logger.log(`-------------------------
+${title}
+${event.getStartTime()}
+${event.getEndTime()}
+${option['description']}
+-------------------------`);
   }
 }
 
-function startsWith(stringItem, word) {
-  return stringItem.indexOf(word) === 0;
-}
-
-function endsWith(stringItem, word) {
-  return (
-    stringItem.lastIndexOf(word) + word.length === stringItem.length &&
-    word.length <= stringItem.length
-  );
-}
-
-function getEvents(calender, diff) {
+function getEvents(calender, diff): GoogleAppsScript.Calendar.CalendarEvent[] {
   const today = new Date();
   const endDate = new Date();
   endDate.setMonth(endDate.getMonth() + diff);
