@@ -6,7 +6,7 @@
     args: [--fix=lf]
   - id: end-of-file-fixer
   - id: pretty-format-json
-    args: [--autofix --indent 4 --no-sort-keys]
+    args: [--autofix]
   - id: check-json
   - id: check-xml
   - id: check-yaml
