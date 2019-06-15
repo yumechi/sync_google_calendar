@@ -1,6 +1,8 @@
 import { CalendarUtil, envProperty } from './util';
 import './string.extensions';
 
+const SEARCH_RANGE = 1;
+
 function main(): void {
   const privateCalendarName: string = envProperty('PRIVATE_CALENDAR');
   const publicCalenderName: string = envProperty('PUBLIC_CALENDAR');
@@ -17,7 +19,7 @@ function main(): void {
 
   const events: GoogleAppsScript.Calendar.CalendarEvent[] = getEvents(
     privateCalendar,
-    1
+    SEARCH_RANGE
   );
 
   for (const calendarKey of Object.keys(events)) {
@@ -86,7 +88,10 @@ ${option['description']}
   }
 }
 
-function getEvents(calender, diff): GoogleAppsScript.Calendar.CalendarEvent[] {
+function getEvents(
+  calender: GoogleAppsScript.Calendar.Calendar,
+  diff: number
+): GoogleAppsScript.Calendar.CalendarEvent[] {
   const today = new Date();
   const endDate = new Date();
   endDate.setMonth(endDate.getMonth() + diff);
