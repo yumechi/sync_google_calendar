@@ -1,7 +1,7 @@
 import { CalendarUtil, envProperty } from './util';
 import './string.extensions';
 
-const SEARCH_RANGE = 1;
+const SEARCH_RANGE = 2;
 
 function main(): void {
   const privateCalendarName: string = envProperty('PRIVATE_CALENDAR');
