@@ -1,36 +1,36 @@
 {
-  "name": "sync_google_calendar",
-  "version": "1.0.0",
-  "description": "my google calendar sync script",
-  "main": "index.js",
+  "author": "yumechi",
+  "bugs": {
+    "url": "https://github.com/yumechi/sync_google_calendar/issues"
+  },
   "dependencies": {
     "@google/clasp": "^2.1.0",
     "@types/google-apps-script": "0.0.53",
     "tslint": "^5.17.0",
     "typescript": "^3.5.1"
   },
+  "description": "my google calendar sync script",
   "devDependencies": {
     "gts": "^1.0.0",
-    "typescript": "~3.4.0"
+    "typescript": "^3.5.1"
   },
-  "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
-    "check": "gts check",
-    "clean": "gts clean",
-    "compile": "tsc -p .",
-    "fix": "gts fix",
-    "prepare": "npm run compile",
-    "pretest": "npm run compile",
-    "posttest": "npm run check"
-  },
+  "homepage": "https://github.com/yumechi/sync_google_calendar#readme",
+  "license": "MIT",
+  "main": "index.js",
+  "name": "sync_google_calendar",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/yumechi/sync_google_calendar.git"
   },
-  "author": "yumechi",
-  "license": "MIT",
-  "bugs": {
-    "url": "https://github.com/yumechi/sync_google_calendar/issues"
+  "scripts": {
+    "check": "gts check",
+    "clean": "gts clean",
+    "compile": "tsc -p .",
+    "fix": "gts fix",
+    "posttest": "npm run check",
+    "prepare": "npm run compile",
+    "pretest": "npm run compile",
+    "test": "echo \"Error: no test specified\" && exit 1"
   },
-  "homepage": "https://github.com/yumechi/sync_google_calendar#readme"
+  "version": "1.0.0"
 }

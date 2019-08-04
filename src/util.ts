@@ -28,5 +28,11 @@ export class CalendarUtil {
  * @returns PropertyString, if not find key then return ''
  */
 export function envProperty(key: string): string {
-  return PropertiesService.getScriptProperties().getProperty(key);
+  const property:
+    | string
+    | null = PropertiesService.getScriptProperties().getProperty(key);
+  if (property == null) {
+    return '';
+  }
+  return property;
 }
